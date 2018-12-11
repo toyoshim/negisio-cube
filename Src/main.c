@@ -54,6 +54,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "usbd_custom_hid_if.h"
 
 /* USER CODE END Includes */
 
@@ -64,6 +65,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+// If USE_SWD_PRINTF is defined, the target device will not work without
+// ST-Link connected via SWD.
+//#define USE_SWD_PRINTF
 
 /* USER CODE END PD */
 
@@ -82,7 +86,8 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-
+extern void initialise_monitor_handles(void);
+extern USBD_HandleTypeDef hUsbDeviceFS;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -97,6 +102,9 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+#ifdef USE_SWD_PRINTF
+  initialise_monitor_handles();
+#endif
 
   /* USER CODE END 1 */
 
@@ -127,6 +135,23 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    static uint8_t report[8] = { 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    HAL_Delay(10);
+    uint32_t a = GPIOA->IDR;
+    report[0] = ~(((a & 0x00c0) >> 6) | ((a & 0x0300) >> 5) | 0xe4);
+    report[1] = ~(((a & 0x0003) << 2) | 0xf3);
+    switch (~a & 0x3c) {
+      case 0x04: report[2] = 0; break;
+      case 0x24: report[2] = 1; break;
+      case 0x20: report[2] = 2; break;
+      case 0x28: report[2] = 3; break;
+      case 0x08: report[2] = 4; break;
+      case 0x18: report[2] = 5; break;
+      case 0x10: report[2] = 6; break;
+      case 0x14: report[2] = 7; break;
+      default: report[2] = 0x0f; break;
+    }
+    USBD_CUSTOM_HID_SendReport(&hUsbDeviceFS, report, 8);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

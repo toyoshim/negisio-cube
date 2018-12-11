@@ -118,6 +118,11 @@
   */
 
 /* USER CODE BEGIN PRIVATE_MACRO */
+// Product and serial index should be 0 to be recognized by NEOGEO mini.
+#undef USBD_IDX_PRODUCT_STR
+#define USBD_IDX_PRODUCT_STR 0
+#undef USBD_IDX_SERIAL_STR
+#define USBD_IDX_SERIAL_STR 0
 
 /* USER CODE END PRIVATE_MACRO */
 

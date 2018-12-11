@@ -2,3 +2,4 @@
 Debug
 Release
 STM32F042K6Tx_FLASH.ld
+debug.cfg
