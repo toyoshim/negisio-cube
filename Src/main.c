@@ -136,7 +136,7 @@ int main(void)
   while (1)
   {
     static uint8_t report[8] = { 0x00, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00 };
-    HAL_Delay(10);
+    HAL_Delay(4);
     uint32_t a = GPIOA->IDR;
     report[0] = ~(((a & 0x00c0) >> 6) | ((a & 0x0300) >> 5) | 0xe4);
     report[1] = ~(((a & 0x0003) << 2) | 0xf3);

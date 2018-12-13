@@ -178,7 +178,11 @@ __ALIGN_BEGIN static uint8_t USBD_CUSTOM_HID_CfgDesc[USB_CUSTOM_HID_CONFIG_DESC_
   0x03,          /*bmAttributes: Interrupt endpoint*/
   CUSTOM_HID_EPIN_SIZE, /*wMaxPacketSize: 2 Byte max */
   0x00,
+#if 1  // BEGIN NegiSioCube MOD
+  5,             /*bInterval: Polling Interval (5 ms) */
+#else
   0x20,          /*bInterval: Polling Interval (20 ms)*/
+#endif  // END NegiSioCube MOD
   /* 34 */
   
   0x07,	         /* bLength: Endpoint Descriptor size */
